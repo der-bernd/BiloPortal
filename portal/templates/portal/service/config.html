@@ -1,0 +1,46 @@
+{% extends 'portal/service/a_page.html' %} {% block content %}
+<hr />
+
+<h3><a href="../../">Back to store</a></h3>
+
+<h3>Configurate a service</h3>
+<p>Book your service just as you need it</p>
+
+{{ service }}
+
+<ul>
+  {% for art in service %} {% if forloop.first %}
+
+  <h4>
+    {{ art.service_name }}
+    <span>
+      - {{ art.service_price }}€
+      <span>
+        {% if art.duration %} - duration at least: {{ art.duration }}
+        months</span
+      >
+      {% endif %}
+    </span>
+  </h4>
+  <h5>This service includes:</h5>
+
+  <!-- bit complex solution: when first item, then closing ul is rendered, then data of service, and opening ul tag follows -->
+  {% endif %}
+
+  <li>
+    <p>{{ art.article_amount }}x {{ art.article_name }}:</p>
+
+    <p>{{ art.group_name }} from {{ art.manu }}</p>
+  </li>
+
+  {% endfor %}
+</ul>
+
+<div>
+  <form method="POST" action="">
+    {% csrf_token %} {{ form.as_p }}
+    <input type="submit" value="Submit booking" />
+  </form>
+</div>
+<span></span>
+{% endblock %}

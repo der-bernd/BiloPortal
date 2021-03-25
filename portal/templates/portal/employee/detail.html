@@ -1,0 +1,18 @@
+{% extends 'portal/employee/a_page.html' %} {% block content %}
+<hr />
+
+<h3><a href="../">Go to list</a></h3>
+<h1>{{ employee.surname }}, {{ employee.name }}</h1>
+<h4>
+  <span> {{ employee.company_name }} </span>
+  <a href="../company/{ employee.company_id }/">View the company</a>
+</h4>
+
+<br />
+<br />
+<p>
+  <a href="delete/">Delete</a>
+  <a href="update/">Update</a>
+</p>
+
+{% endblock %}

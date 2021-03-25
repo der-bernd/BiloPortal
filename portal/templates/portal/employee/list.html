@@ -1,0 +1,38 @@
+{% extends 'portal/company/a_page.html' %} {% block content %}
+<hr />
+<p><a href="create/">Create new</a></p>
+
+<h3>List of your companies:</h3>
+{% if list %}
+<ul>
+  {% for empl in list %}
+  <li>
+    <div>
+      <p>
+        <span>{{ com.name }}</span>
+        <span>in {{ com.city }}</span>
+      </p>
+      {% if com.children %}
+      <ul>
+        {% for ch in com.children %}
+        <li>
+          <p>
+            <span>{{ ch.name }}</span>
+            <span>in {{ ch.city }}</span>
+            <a href="{{ ch.link }}">View</a>
+          </p>
+        </li>
+
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <a href="{{ com.link }}">View</a>
+    </div>
+  </li>
+
+  {% endfor %}
+</ul>
+{% else %}
+<p>No products to display yet</p>
+{% endif %} {% endblock %}

@@ -3,12 +3,15 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 
 from .managers import CustomUserManager
+from portal.models import Company
 
 
 class Responsible(AbstractUser):
     username = None
     email = None
-    mail = models.EmailField(_('mail address'), unique=True)
+    mail = models.EmailField(unique=True)
+    company = models.ForeignKey(
+        Company, on_delete=models.RESTRICT, null=True, blank=False)
 
     USERNAME_FIELD = 'mail'  # one of the most important rows
     REQUIRED_FIELDS = []

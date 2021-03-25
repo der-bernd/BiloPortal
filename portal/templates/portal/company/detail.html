@@ -1,0 +1,131 @@
+{% extends 'portal/company/a_page.html' %} {% block content %}
+<hr />
+
+<h3><a href="../">Go to list</a></h3>
+<h1>{{ company.name }}</h1>
+<h2>Company structure</h2>
+<p><a href="/portal/company/">Back to root company</a></p>
+{{companies}}
+
+  {% for key, level in companies.items %}
+  {% with ''|center:key as range %}
+  {% for _ in range %}
+  <ul><li>
+    {% endfor %}
+    {% endwith %}
+  {% for company in level %} {% if forloop.first %}
+  <p>
+    {% if key == 1 %}<strong>{% endif %}
+    Level {{ company.level }}</p>
+    {% if key == 1 %}</strong>{% endif %}
+  <span></span>
+  {% endif %}
+  <ul>
+    <li>
+      <p><span>{{ company.name }}</span>
+         {% if company.id == request.user.company.id %}
+    <span>(My company)</span>
+    {% endif %}
+        {% if key == 0 and company.id == request.user.company.id or key > 1 %}
+        <!-- when company is hierarchical lower than my company, I can visit it as well -->
+      <a href="{{ company.link }}">View</a>
+      {% endif %}
+      </p>
+      <p><span>{{ company.postcode }}</span> <span>{{ company.city }}</span></p>
+      <p>{{ company.details }}</p>
+    </li>
+  </ul>
+  {% endfor %}
+  {% with ''|center:key as range %}
+  {% for _ in range %}
+</ul></li>
+    {% endfor %}
+    {% endwith %}
+  {% endfor %}
+
+<!-- {% if company.mother_company_id %}
+<h3>mother company:</h3>
+<p>
+  <span>{{ company.mother_name }}</span>
+  <span>{{ company.mother_city }}</span>
+  <a href="../{{ company.mother_company_id }}/">view mother</a>
+</p>
+{% endif %} -->
+
+<br />
+<br />
+
+<!-- <p>
+  <a href="update/">edit my company</a>
+</p> -->
+<br />
+
+<h3>Responsibles</h3>
+<ul>
+  {% for r in responsibles %}
+  <li>
+    <p>
+      <span> {{ r.last_name }}, </span>
+      <span> {{ r.first_name }}</span>
+      {% if user.mail == r.mail %}
+      <span>(You)</span>
+      {% endif %}
+    </p>
+  </li>
+  {% empty %}
+  <p>Warning: no responsibles stored yet</p>
+  {% endfor %}
+</ul>
+<h3>Employees</h3>
+<p>
+  <a href="add-employee">Add new</a>
+</p>
+<ul>
+  {% for e in employees %}
+  <li>
+    <p>      
+      <span> {{ e.last_name }}, </span>
+      <span> {{ e.first_name }}</span>
+      <a href="update-employee/{{ e.uuid }}/">Update</a>
+      <a href="delete-employee/{{ e.uuid }}/">Delete</a>
+    </p>
+  </li>
+  {% empty %}
+  <p>Warning: no employees stored yet</p>
+  {% endfor %}
+</ul>
+<h2>
+  Subscriptions
+  <a href="store/">go to store</a>
+</h2>
+
+
+
+{% for key, articles in services.items %}
+<span></span>
+{% for art in articles %} {% if forloop.first %}
+<h3>
+  {{ art.service_name }}
+  <span>({{ art.amount }}x)</span>
+</h3>
+<p>booked at: {{ art.created }} - last change: {{ art.updated }}</p>{{ art.booking_id }}
+<p>runtime: service ends on {{ art.end_date }} ({{ art.months_left }} months left)
+  <a href="/portal/company/lengthen-booking/{{ art.uuid }}/">lengthen my booking</a>
+</p>
+{% endif %}
+<ul>
+  <li>
+    <p>{{ art.article_amount }}x {{ art.group_name }}:</p>
+
+    <p>{{ art.article_name }} - {{ art.manu }}</p>
+  </li>
+</ul>
+{% endfor %}
+
+{% include './gantt_chart.html' %}
+{% empty %}
+<p>You haven't booked any services yet</p>
+{% endfor %}
+
+
+{% endblock %}

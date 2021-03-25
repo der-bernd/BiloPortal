@@ -1,0 +1,20 @@
+{% extends 'portal/company/a_page.html' %} {% block content %}
+<hr />
+<form action="" method="POST">
+  {% csrf_token %}
+  <h3>Do you want to delete {{ object.name }}?</h3>
+  {% if object.children %}
+  <h4>
+    ! This company has {{ object.children }} child companies which would be
+    deleted as well !
+  </h4>
+  {% else %}
+  <p>This company has no child companies</p>
+  {% endif %}
+  <p>
+    <input type="submit" value="Yes, delete" />
+    <a href="../">Cancel</a>
+  </p>
+</form>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+    {% block app %}
+    <h1>Biloportal</h1>
+    <hr />
+    {% if user.is_authenticated %}
+    {% block page %}
+
+    {{ user.first_name }}
+
+    <h2>Avaiable pages in this app:</h2>
+    
+    <ul>
+      
+      <li>
+        <a href="company/">
+          View my Company
+        </a>
+      </li>
+      <li>
+        <a href="company/{{ request.user.company.uuid }}/create-employee/">
+          Create new employee
+        </a>
+      </li>
+      <li>
+        <a href="company/{{ request.user.company.uuid }}/store/">
+          Directly to store
+        </a>
+      </li>
+      <li>
+        <a href="test/">
+          Test
+        </a>
+      </li>
+    </ul>
+    <br />
+    {% endblock %}
+    {% else %}
+    <p>You are not logged in</p>
+    <p><a href="auth/login/">Log In</a></p>
+    {% endif %}
+    {% endblock %}
+    <br />
+  </body>
+</html>

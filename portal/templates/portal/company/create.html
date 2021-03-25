@@ -1,0 +1,12 @@
+{% extends 'portal/company/a_page.html' %} {% block content %}
+
+<h4>Create a new company</h4>
+<form method="POST" action="">
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Save" />
+</form>
+
+<p>
+  <a href="../">Back to list</a>
+</p>
+{% endblock %}

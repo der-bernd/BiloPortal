@@ -26,6 +26,8 @@
         <li class="nav-item">
           {% if request.user.is_authenticated %}
           <span>{{ request.user }}</span>
+          <span>Hello, {{ request.user.first_name }}</span>
+
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>
           {% else %}
           <a class="nav-link" href="{% url 'login' %}">Login</a>

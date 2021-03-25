@@ -1,0 +1,45 @@
+{% extends 'portal/service/a_page.html' %} {% block content %}
+<hr />
+
+<h3><a href="../">Back to {{ company.name }}</a></h3>
+
+<p>{{ services }}</p>
+
+<h3>Currently offered services</h3>
+{% for key, articles in services.items %}
+<span></span>
+<ul>
+  {% for art in articles %} {% if forloop.first %}
+
+  <h4>
+    {% if art.is_already_booked %}
+    <span>(🗸)</span>
+    {% endif %} {{ art.service_name }}
+    <span>
+      - {{ art.service_price }}€
+      <span> {% if art.duration %} - duration: {{ art.duration }} months</span>
+      {% endif %}
+    </span>
+    <a href="/support/">Ask support</a>
+
+    <a href="{{ art.uuid }}/config/">
+      {% if art.is_already_booked %}
+      <span>Book another one</span>
+      {% else %}
+      <span>Configuration</span>
+      {% endif %}
+    </a>
+  </h4>
+
+  <!-- bit complex solution: when first item, then closing ul is rendered, then data of service, and opening ul tag follows -->
+  {% endif %}
+
+  <li>
+    <p>{{ art.article_amount }}x {{ art.article_name }}:</p>
+
+    <p>{{ art.group_name }} from {{ art.manu }}</p>
+  </li>
+
+  {% endfor %}
+</ul>
+{% endfor %} {% endblock %}

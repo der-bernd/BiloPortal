@@ -1,0 +1,18 @@
+{% extends 'portal/employee/a_page.html' %} {% block content %}
+<h4>
+  {% if creating %}
+  <span>Create a new employee</span>
+  <a href="../">Back to company</a>
+  {% else %}
+  <span>Update an employee</span>
+  <a href="../../">Back to company</a>
+  {% endif %}
+</h4>
+<hr />
+
+<form method="POST" action="">
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Save" />
+</form>
+
+{% endblock %}

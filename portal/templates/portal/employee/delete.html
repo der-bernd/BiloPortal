@@ -1,0 +1,16 @@
+{% extends 'portal/employee/a_page.html' %} {% block content %}
+<hr />
+<form action="" method="POST">
+  {% csrf_token %}
+
+  <h3>
+    Do you want to delete {{ employee.first_name }} {{ employee.last_name }}?
+  </h3>
+
+  <p>
+    <input type="submit" value="Yes, delete" />
+    <a href="../../">Cancel</a>
+  </p>
+</form>
+
+{% endblock %}
