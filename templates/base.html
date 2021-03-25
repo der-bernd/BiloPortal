@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% if site_info.app %}
+    <title>{{ site_info.app }} - {{ site_info.page }}</title>
+    {% else %}
+    <title>Django Project</title>
+    {% endif %}
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+    <h3>Django Project -</h3>
+    {% block app %}
+    <div>
+      <h4>Please choose an app from the navigation bar above</h4>
+    </div>
+
+    {% endblock %}
+  </body>
+</html>

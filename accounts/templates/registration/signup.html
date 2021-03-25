@@ -1,0 +1,11 @@
+<h2>
+  {% if creating %}
+  <span> Create new </span>
+  {% else %}
+  <span> Update </span>
+  {% endif %} employee for {{ company.name }}
+</h2>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Sign Up</button>
+</form>
