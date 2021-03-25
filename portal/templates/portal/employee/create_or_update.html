@@ -10,10 +10,12 @@
 </h4>
 <hr />
 
+{% if file_form %}
 <form method="POST" enctype="multipart/form-data" action="">
   {% csrf_token %} {{ file_form.as_p }}
   <input type="submit" value="Save" />
 </form>
+{% endif %}
 
 <form method="POST" action="">
   {% csrf_token %} {{ em_form.as_p }}

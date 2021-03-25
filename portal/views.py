@@ -291,7 +291,10 @@ def employee_create_update(request, com_id, em_id=''):
         obj = None
 
     em_form = EmployeeForm(instance=obj)
-    file_form = EmployeeImportForm()
+    if em_id == '':
+        file_form = EmployeeImportForm()
+    else:
+        file_form = None
 
     return render(request, 'portal/employee/create_or_update.html', get_final_context(request, {
         'em_form': em_form,
