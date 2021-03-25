@@ -1,3 +1,5 @@
+from io import StringIO
+import csv
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count
@@ -7,7 +9,7 @@ from django.utils.text import slugify
 
 from dateutil.relativedelta import relativedelta
 
-from .forms import CompanyForm, EmployeeForm, BookingConfigForm
+from .forms import CompanyForm, EmployeeForm, EmployeeImportForm, BookingConfigForm
 from json import dumps
 
 from .models import *
@@ -242,25 +244,43 @@ def company_detail(request, com_id=''):
 
 def employee_create_update(request, com_id, em_id=''):
     if request.method == 'POST':
-        try:
-            if em_id == '':
+        if not request.FILES:
+            try:
+                if em_id == '':
+                    obj = None
+                else:
+                    obj = Employee.objects.get(uuid=em_id)
+            except:
                 obj = None
-            else:
-                obj = Employee.objects.get(uuid=em_id)
-        except:
-            obj = None
-        # have to give obj as well, otherwise new record would be created
-        form = EmployeeForm(request.POST, instance=obj)
+            # have to give obj as well, otherwise new record would be created
+            form = EmployeeForm(request.POST, instance=obj)
+        else:  # file(s) were uploaded
+
+            company = Company.objects.get(uuid=com_id)
+            csv_file = request.FILES['file']
+
+            if not csv_file.name.endswith('.csv'):
+                return None
+            csv_data = csv_file.read().decode('utf-8')
+
+            io_string = StringIO(csv_data)
+            next(io_string)  # skip header
+
+            for line in csv.reader(io_string, delimiter=','):
+                _, created = Employee.objects.update_or_create(
+                    first_name=line[0],
+                    last_name=line[1],
+                    mail=line[2],
+                    company=company
+                )
+
+            return redirect('/portal/company/')
 
         if form.is_valid():
             empl = form.save(commit=False)
             empl.company = Company.objects.get(uuid=com_id)
             form.save()
-            if obj is None:
-                return redirect('../')  # redirect directly to company details
-            else:
-                # same procedure as above: one level further
-                return redirect('../../')
+            return redirect('portal:detail')
 
     try:
         if em_id == '':
@@ -270,10 +290,12 @@ def employee_create_update(request, com_id, em_id=''):
     except:
         obj = None
 
-    form = EmployeeForm(instance=obj)
+    em_form = EmployeeForm(instance=obj)
+    file_form = EmployeeImportForm()
 
     return render(request, 'portal/employee/create_or_update.html', get_final_context(request, {
-        'form': form,
+        'em_form': em_form,
+        'file_form': file_form,
         'creating': obj is None,
     }))
 

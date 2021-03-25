@@ -10,8 +10,13 @@
 </h4>
 <hr />
 
+<form method="POST" enctype="multipart/form-data" action="">
+  {% csrf_token %} {{ file_form.as_p }}
+  <input type="submit" value="Save" />
+</form>
+
 <form method="POST" action="">
-  {% csrf_token %} {{ form.as_p }}
+  {% csrf_token %} {{ em_form.as_p }}
   <input type="submit" value="Save" />
 </form>
 

@@ -63,6 +63,10 @@ class EmployeeForm(forms.ModelForm):
             raise ValidationError('Mail not valid')
 
 
+class EmployeeImportForm(forms.Form):
+    file = forms.FileField()
+
+
 class BookingConfigForm(forms.ModelForm):
     amount = forms.IntegerField(min_value=1, initial=1)
     start_date = forms.DateField(widget=NumberInput(attrs={'type': 'date'}))
