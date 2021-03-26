@@ -1,7 +1,9 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import CreateView
 from django.shortcuts import render, redirect
 from portal.models import Company
+from accounts.models import Responsible
+from django.conf import settings
 
 from .forms import ResponsibleCreationForm, ResponsibleChangeForm
 
@@ -29,4 +31,17 @@ def responsible_create_update(request, com_id):
     return render(request, 'registration/signup.html', {
         'form': form,
         'company': company
+    })
+
+
+def responsible_delete(request, resp_id):
+    resp = settings.AUTH_USER_MODEL
+    print(resp)
+    if request.method == 'POST':
+        resp.delete()
+
+        return reverse('portal:home')
+
+    return render(request, 'registration/delete.html', {
+        'responsible': resp
     })

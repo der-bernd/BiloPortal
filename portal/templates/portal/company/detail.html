@@ -63,7 +63,7 @@
 <h3>Responsibles</h3>
 {% if user.is_admin or user.is_staff %}
 <p>
-  <a href="{% url 'accounts:signup' com_id=current.uuid %}">Add new</a>
+  <a href="{% url 'accounts:add-responsible' com_id=current.uuid %}">Add new</a>
 </p>
 {% endif %}
 <ul>
@@ -88,7 +88,7 @@
       <span>(SUPPORT)</span>
       {% endif %}
       {% if user.is_admin and not r.is_admin %}
-      <a href="delete-responsible/{{ r.uuid }}/">Delete</a>
+      <a href="{% url 'accounts:delete-responsible' resp_id=r.uuid %}">Delete</a>
       {% endif %}
     </p>
   </li>
@@ -116,7 +116,7 @@
 </ul>
 <h2>
   Subscriptions
-  <a href="store/">go to store</a>
+  <a href="{% url 'portal:store' com_id=current.uuid %}">go to store</a>
 </h2>
 
 

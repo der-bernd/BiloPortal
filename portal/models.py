@@ -33,10 +33,6 @@ class Company(models.Model):
     mother_company = models.ForeignKey(
         'self', on_delete=models.CASCADE, null=True, blank=True)
 
-    def link(self):
-        # f"/products/{self.id}/"
-        return f"/portal/company/{ self.uuid }/"
-
     def __str__(self):
         return self.name
 

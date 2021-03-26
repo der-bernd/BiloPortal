@@ -1,0 +1,14 @@
+<form action="" method="POST">
+  {% csrf_token %}
+
+  <h3>
+    Do you want to delete {% if responsible.last_name %}
+    <span> {{ responsible.first_name }} {{ responsible.last_name }} </span>
+    {% else %} {{ responsible.mail }} {% endif %} ?
+  </h3>
+
+  <p>
+    <input type="submit" value="Yes, delete" />
+    <a href="{% url 'portal:home' %}">Cancel</a>
+  </p>
+</form>

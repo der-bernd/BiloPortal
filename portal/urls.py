@@ -11,7 +11,7 @@ urlpatterns = [
     path('', app_overview, name="overview"),
 
     # company stuff
-    path('company/', company_detail, name="my-detail"),
+    path('company/', company_detail, name="home"),
     path('company-list/', company_list_view, name="company-list"),
     path('company/create/', company_create_update, name="create"),
     path('company/<uuid:com_id>/', company_detail, name="portal_company_detail"),
@@ -25,7 +25,7 @@ urlpatterns = [
          employee_delete, name="delete-employee"),
 
     path('company/<uuid:com_id>/store/',
-         service_store, name="service-store"),
+         service_store, name="store"),
     path('company/<uuid:com_id>/store/<uuid:service_id>/config/',
          service_config, name="service-config"),
 

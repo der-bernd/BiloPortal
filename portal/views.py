@@ -2,6 +2,7 @@ from io import StringIO
 import csv
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.db.models import Count
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -268,13 +269,13 @@ def employee_create_update(request, com_id, em_id=''):
                     company=company
                 )
 
-            return redirect('/portal/company/')
+            return reverse('portal:home')
 
         if form.is_valid():
             empl = form.save(commit=False)
             empl.company = Company.objects.get(uuid=com_id)
             form.save()
-            return redirect('portal:detail')
+            return reverse('portal:home')
 
     try:
         if em_id == '':
