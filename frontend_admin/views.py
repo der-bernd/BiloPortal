@@ -52,31 +52,6 @@ def import_articles(request):
 
         model_type.objects.bulk_create(bulk)
 
-        # for line in csv.reader(io_string, delimiter=','):
-        #     bulk.append(Entry())
-
-        #     type_model = switcher[type_]
-        #     if type_model is None:
-        #         print('Fail')
-        #         return
-
-        #     print(line)
-
-        #     # elif type_ == 'manufacturer':
-        #     #     Manufacturer.objects.create(
-        #     #         name=line[0], erp_id=line[1], website=line[2], support_mail=line[3])
-        # switcher = {
-        #     'article': Article,
-        #     'manu': Manufacturer,
-        #     'group': ArticleGroup
-        # }
-        # obj = type_model.objects.get(name=line[0])
-        # if not obj:
-        #         print('ERROR at importing: of ' +
-        #               line[0] + ' not found!')
-        # else:
-        # type_model.objects.create(line)
-
         return redirect('frontend_admin:import-articles')
 
     return render(request, 'frontend/import.html', {

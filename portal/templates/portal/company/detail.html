@@ -87,8 +87,11 @@
       {% if r.is_staff %}
       <span>(SUPPORT)</span>
       {% endif %}
-      {% if user.is_admin and not r.is_admin %}
+      {% if user.is_admin or user.is_staff %}
+      {% if not r.is_admin and user.mail != r.mail %}
+
       <a href="{% url 'accounts:delete-responsible' resp_id=r.uuid %}">Delete</a>
+      {% endif %}
       {% endif %}
     </p>
   </li>
