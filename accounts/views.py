@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.shortcuts import render, redirect
 from portal.models import Company
@@ -24,7 +24,7 @@ def responsible_create_update(request, com_id):
             obj.company = company
             form.save()
 
-            return redirect('/portal/company/')
+            return redirect('portal:home')
 
     form = ResponsibleCreationForm()
 
@@ -35,12 +35,11 @@ def responsible_create_update(request, com_id):
 
 
 def responsible_delete(request, resp_id):
-    resp = settings.AUTH_USER_MODEL
-    print(resp)
+    resp = Responsible.objects.get(uuid=resp_id)
     if request.method == 'POST':
         resp.delete()
 
-        return reverse('portal:home')
+        return redirect('portal:home')
 
     return render(request, 'registration/delete.html', {
         'responsible': resp

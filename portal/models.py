@@ -82,11 +82,11 @@ class Article(models.Model):
         max_length=128, null=True, blank=True)  # if distinct to above
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     group = models.ForeignKey(
-        ArticleGroup, on_delete=models.PROTECT, null=True)
+        ArticleGroup, on_delete=models.PROTECT, null=True, blank=False)
     price = models.IntegerField()
     # in days, NULL stands for not-expiring
-    duration = models.IntegerField(null=True)
-    end_of_sales = models.DateField(null=True)
+    duration = models.IntegerField(null=True, blank=True)
+    end_of_sales = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.name

@@ -48,7 +48,7 @@ class EquipmentAdmin(admin.ModelAdmin):
 @admin.register(Manufacturer)
 class ManufacturerAdmin(admin.ModelAdmin):
     list_filter = []
-    list_display = ['name', 'notes']
+    list_display = ['name', 'support_mail', 'notes']
 
 
 @admin.register(Booking)

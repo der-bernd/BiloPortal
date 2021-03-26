@@ -1,0 +1,28 @@
+<h4>Import articles via csv</h4>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %} {{ form.as_p }}
+  <label
+    >Choose a csv file:
+    <input name="file" type="file" accept=".csv" />
+  </label>
+  <p>
+    <label for="cars">Choose a model:</label>
+    <select name="type">
+      <option value="article">Article</option>
+      <option value="manu">Manufacturer</option>
+      <option value="company">Company</option>
+      <option value="group">Group</option>
+    </select>
+  </p>
+  <p>
+    <label for="keep_items">Keep items</label>
+    <input type="checkbox" name="keep_items" />
+  </p>
+
+  <p>
+    <input type="submit" value="Save" />
+  </p>
+</form>
+<p>
+  <a href="{% url 'portal:home' %}">Back to company</a>
+</p>

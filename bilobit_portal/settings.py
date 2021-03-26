@@ -42,7 +42,8 @@ INSTALLED_APPS = [
 
     'accounts',
     'info_pages',
-    'portal'
+    'portal',
+    'frontend_admin'
 ]
 
 MIDDLEWARE = [

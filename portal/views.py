@@ -43,7 +43,7 @@ def company_delete(request, com_id):
     obj.children = children
     if request.method == 'POST':  # delete object only when POSTING to this url
         obj.delete()
-        return redirect('../../')
+        return redirect('/')
     else:
         return render(request, 'portal/company/delete.html', get_final_context(request, {
             "object": obj,
@@ -128,7 +128,7 @@ def company_update(request, id=0):
         print(request.body)
         if form.is_valid():
             form.save()
-            return redirect('../')  # redirect directly to list
+            return redirect('portal:home')  # redirect directly to list
     else:
         return render(request, 'portal/company/create.html', get_final_context(request, {
             'form': form
@@ -147,10 +147,7 @@ def company_create_update(request, com_id=''):
         if form.is_valid():
             form.save()
 
-            if obj is None:
-                return redirect('../')  # redirect directly to list
-            else:
-                return redirect('../../')  # has to go one more level up
+            return redirect('portal:home')
 
     # the part below will handle GET requests when not returned already
     try:
@@ -186,7 +183,7 @@ def company_detail(request, com_id=''):
     if com_id == '':  # select default company for this user
         root_company_uuid = request.user.company.uuid
         # when no uuid in url, then find out matching url and redirect to it
-        return redirect(str(root_company_uuid) + '/')
+        return redirect('portal:home-uuid', com_id=root_company_uuid)
 
     all_comps = Company.objects.raw(
         GET_COMPANY_HIERARCHY, [re_slugify(com_id)])
@@ -256,9 +253,9 @@ def employee_create_update(request, com_id, em_id=''):
 
             if not csv_file.name.endswith('.csv'):
                 return None
+
             csv_data = csv_file.read().decode('utf-8')
 
-            io_string = StringIO(csv_data)
             next(io_string)  # skip header
 
             for line in csv.reader(io_string, delimiter=','):
@@ -269,13 +266,13 @@ def employee_create_update(request, com_id, em_id=''):
                     company=company
                 )
 
-            return reverse('portal:home')
+            reverse('portal:home')
 
         if form.is_valid():
             empl = form.save(commit=False)
             empl.company = Company.objects.get(uuid=com_id)
             form.save()
-            return reverse('portal:home')
+            reverse('portal:home')
 
     try:
         if em_id == '':
@@ -301,13 +298,13 @@ def employee_create_update(request, com_id, em_id=''):
 def employee_delete(request, com_id, em_id):
     obj = Employee.objects.get(uuid=em_id)
 
-    if request.method == 'POST':  # delete object only when POSTING to this url
+    if request.method == 'POST':
         obj.delete()
-        return redirect('../../')
-    else:
-        return render(request, 'portal/employee/delete.html', get_final_context(request, {
-            "employee": obj,
-        }))
+        return redirect('portal:home')
+
+    return render(request, 'portal/employee/delete.html', get_final_context(request, {
+        "employee": obj,
+    }))
 
 
 def service_store(request, com_id):
