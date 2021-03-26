@@ -27,12 +27,6 @@ def app_overview(request):
     return render(request, 'portal/app.html', get_final_context(request))
 
 
-def test(request):
-    return render(request, 'portal/test.html', get_final_context(request, {
-        'data': 'hello'
-    }))
-
-
 def get_final_context(request, obj={}):
     obj['site_info'] = {
         'app': 'Bilobit',

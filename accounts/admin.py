@@ -9,21 +9,21 @@ class ResponsibleAdmin(UserAdmin):
     add_form = ResponsibleCreationForm
     form = ResponsibleChangeForm
     model = Responsible
-    list_display = ('mail', 'company', 'is_staff', 'is_active',)
-    list_filter = ('is_staff', 'is_active', 'company')
+    list_display = ('mail', 'company', 'is_admin', 'is_staff', 'is_active')
+    list_filter = ('is_staff', 'is_active', 'company', 'is_admin')
     fieldsets = (
         (None, {'fields': ('mail', 'first_name',
-                           'last_name', 'company', 'password')}),
+                           'last_name', 'company', 'is_admin', 'password')}),
         ('Permissions', {'fields': ('is_staff', 'is_active')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('mail', 'first_name', 'last_name', 'company', 'password1', 'password2', 'is_staff', 'is_active')}
+            'fields': ('mail', 'first_name', 'last_name', 'company', 'is_admin', 'password1', 'password2', 'is_staff', 'is_active')}
          ),
     )
     search_fields = ('mail',)
-    ordering = ('mail',)
+    ordering = ('company', 'is_admin', 'mail')
 
 
 admin.site.register(Responsible, ResponsibleAdmin)

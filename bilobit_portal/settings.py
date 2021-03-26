@@ -139,3 +139,14 @@ LOGOUT_REDIRECT_URL = '/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+# SMTP configuration
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = mail.HOST
+EMAIL_PORT = mail.PORT
+EMAIL_HOST_USER = mail.USER
+EMAIL_HOST_PASSWORD = mail.PASS
+EMAIL_USE_TLS = mail.TLS
+EMAIL_USE_SSL = mail.SSL

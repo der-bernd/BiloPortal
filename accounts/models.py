@@ -12,6 +12,7 @@ class Responsible(AbstractUser):
     mail = models.EmailField(unique=True)
     company = models.ForeignKey(
         Company, on_delete=models.RESTRICT, null=True, blank=False)
+    is_admin = models.BooleanField(_('Admin'), default=False)
 
     USERNAME_FIELD = 'mail'  # one of the most important rows
     REQUIRED_FIELDS = []

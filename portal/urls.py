@@ -10,8 +10,6 @@ app_name = "portal"
 urlpatterns = [
     path('', app_overview, name="overview"),
 
-    path('test/', test, name="test"),
-
     # company stuff
     path('company/', company_detail, name="my-detail"),
     path('company-list/', company_list_view, name="company-list"),

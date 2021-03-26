@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 from .models import Responsible
 
@@ -6,10 +6,10 @@ from .models import Responsible
 class ResponsibleCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = Responsible
-        fields = ('mail',)
+        fields = ('mail', 'first_name', 'last_name')
 
 
 class ResponsibleChangeForm(UserChangeForm):
     class Meta:
         model = Responsible
-        fields = ('mail',)
+        fields = ('mail', 'first_name', 'last_name')

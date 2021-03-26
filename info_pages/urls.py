@@ -7,6 +7,7 @@ app_name = 'info_pages'
 
 urlpatterns = [
     path('', redirect_to_home),
+
     path('home/', home_view, name="home"),
     path('about/', about_view, name="about"),
     path('accounts/', include('django.contrib.auth.urls')),

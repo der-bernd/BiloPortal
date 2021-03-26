@@ -61,14 +61,34 @@
 <br />
 
 <h3>Responsibles</h3>
+{% if user.is_admin or user.is_staff %}
+<p>
+  <a href="{% url 'accounts:signup' com_id=current.uuid %}">Add new</a>
+</p>
+{% endif %}
 <ul>
   {% for r in responsibles %}
   <li>
     <p>
+      {% if r.last_name %}
       <span> {{ r.last_name }}, </span>
       <span> {{ r.first_name }}</span>
+      {% else %}
+      <span>
+        {{ r.mail }}
+      </span>
+      {% endif %}
       {% if user.mail == r.mail %}
       <span>(You)</span>
+      {% endif %}
+      {% if r.is_admin %}
+      <span>(ADMIN)</span>
+      {% endif %}
+      {% if r.is_staff %}
+      <span>(SUPPORT)</span>
+      {% endif %}
+      {% if user.is_admin and not r.is_admin %}
+      <a href="delete-responsible/{{ r.uuid }}/">Delete</a>
       {% endif %}
     </p>
   </li>

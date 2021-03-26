@@ -24,9 +24,19 @@
           <a class="nav-link" href="/portal/">Portal</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="/test/">Test</a>
+        </li>
+
+        <li class="nav-item">
           {% if request.user.is_authenticated %}
           <span>{{ request.user }}</span>
-          <span>Hello, {{ request.user.first_name }}</span>
+          <span
+            >Hello, {% if request.user.first_name %}
+            <span> {{ request.user.first_name }} </span>
+            {% else %}
+            <span>user without a first name</span>
+            {% endif %}
+          </span>
 
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>
           {% else %}
