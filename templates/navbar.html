@@ -21,7 +21,7 @@
           <a class="nav-link" href="/about/">About</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/portal/">Portal</a>
+          <a class="nav-link" href="{% url 'portal:home' %}">Portal</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/test/">Test</a>
@@ -39,10 +39,18 @@
           </span>
 
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          <a class="nav-link" href="{% url 'accounts:change-password' %}"
+            >Change password</a
+          >
           {% else %}
           <a class="nav-link" href="{% url 'login' %}">Login</a>
           {% endif %}
         </li>
+        {% if user.is_staff %}
+        <li class="nav-item">
+          <a class="nav-link" href="/test/">Test</a>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>
