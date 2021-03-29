@@ -1,5 +1,5 @@
 <h4>Import articles via csv</h4>
-<form method="post" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data">
   {% csrf_token %} {{ form.as_p }}
   <label
     >Choose a csv file:

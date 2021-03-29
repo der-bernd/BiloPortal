@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from portal.models import Article, Manufacturer, ArticleGroup
+from portal.models import Article, Manufacturer, ArticleGroup, Company
 from .forms import FileImportForm
 from io import StringIO
 import csv
@@ -29,7 +29,8 @@ def import_articles(request):
         switcher = {
             'article': Article,
             'manu': Manufacturer,
-            'group': ArticleGroup
+            'group': ArticleGroup,
+            'company': Company
         }
 
         model_type = switcher[type_]

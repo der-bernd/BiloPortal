@@ -28,7 +28,7 @@
     {% endif %}
         {% if key == 0 and company.id == request.user.company.id or key > 1 %}
         <!-- when company is hierarchical lower than my company, I can visit it as well -->
-      <a href="{{ company.link }}">View</a>
+      <a href="{% url 'portal:home-uuid' com_id=company.uuid %}">View</a>
       {% endif %}
       </p>
       <p><span>{{ company.postcode }}</span> <span>{{ company.city }}</span></p>

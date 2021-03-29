@@ -3,8 +3,6 @@
 
 <h3><a href="../">Back to {{ company.name }}</a></h3>
 
-<p>{{ services }}</p>
-
 <h3>Currently offered services</h3>
 {% for key, articles in services.items %}
 <span></span>
@@ -42,4 +40,6 @@
 
   {% endfor %}
 </ul>
+{% empty %}
+<p>Currently we don't offer any services to book</p>
 {% endfor %} {% endblock %}

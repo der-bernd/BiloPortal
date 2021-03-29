@@ -309,7 +309,6 @@ def employee_delete(request, com_id, em_id):
 
 def service_store(request, com_id):
     company = Company.objects.get(uuid=com_id)
-    print(company.id)
 
     query = str(GET_SERVICES_FROM_STORE)
 
