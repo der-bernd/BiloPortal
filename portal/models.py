@@ -66,7 +66,7 @@ class ArticleGroup(models.Model):
 
 
 class Manufacturer(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     erp_id = models.CharField(max_length=128)
     website = models.URLField(null=True)
     support_mail = models.EmailField(null=True)
@@ -150,7 +150,7 @@ class Booking(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     amount = models.IntegerField(default=1)
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True),
+    updated = models.DateTimeField(auto_now=True)
     # updated_by = models.ForeignKey(Responsible, on_delete=models.RESTRICT)
     notes = models.CharField(max_length=1000, null=True, blank=True)
     internal_notes = models.CharField(max_length=5000, null=True, blank=True)

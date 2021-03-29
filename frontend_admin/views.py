@@ -7,24 +7,29 @@ import io
 import pandas
 
 
+def csv_upload_to_dict_list(request_FILE):
+    csv_file = request_FILE
+
+    if not csv_file.name.endswith('.csv'):
+        return None
+    csv_data = csv_file.read().decode('utf-8')
+
+    # https://stackoverflow.com/questions/59163616/read-a-django-uploadedfile-into-a-pandas-dataframe
+    dataframe = pandas.read_csv(io.StringIO(csv_data), delimiter=',')
+
+    print(dataframe)
+    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_dict.html
+    dict_list = dataframe.to_dict('records')
+
+    return dict_list
+
+
 def import_articles(request):
     if request.method == 'POST':
         type_ = request.POST.get('type')
         keep_items = request.POST.get('keep_items')
-        csv_file = request.FILES['file']
 
-        if not csv_file.name.endswith('.csv'):
-            return None
-        csv_data = csv_file.read().decode('utf-8')
-
-        paramFile = request.FILES['file'].file
-
-        # https://stackoverflow.com/questions/59163616/read-a-django-uploadedfile-into-a-pandas-dataframe
-        dataframe = pandas.read_csv(io.StringIO(csv_data), delimiter=',')
-
-        print(dataframe)
-        # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_dict.html
-        dict_list = dataframe.to_dict('records')
+        dict_list = csv_upload_to_dict_list(request.FILES['file'])
 
         switcher = {
             'article': Article,
@@ -34,11 +39,24 @@ def import_articles(request):
         }
 
         model_type = switcher[type_]
-
-        bulk = [  # https://stackoverflow.com/questions/18383471/django-bulk-create-function-example
-            model_type(**item)
-            for item in dict_list
-        ]
+        bulk = []
+        if type_ == 'article':
+            manus = Manufacturer.objects.all()
+            art_group = ArticleGroup.objects.all()
+            for item in dict_list:
+                try:
+                    item['manufacturer'] = manus.get(name=item['manufacturer'])
+                    item['group'] = art_group.get(name=item['group'])
+                except:
+                    print('Could not import ' + str(item))
+                    continue
+                new_obj = model_type(**item)
+                bulk.append(new_obj)
+        else:
+            bulk = [  # https://stackoverflow.com/questions/18383471/django-bulk-create-function-example
+                model_type(**item)
+                for item in dict_list
+            ]
 
         if keep_items:
             start_index = model_type.objects.all().order_by("-id")[0].id
@@ -48,8 +66,6 @@ def import_articles(request):
         for key, item in enumerate(dict_list):
             key += start_index
             item['pk'] = key
-
-        print(dict_list)
 
         model_type.objects.bulk_create(bulk)
 
