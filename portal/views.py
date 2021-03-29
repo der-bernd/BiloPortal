@@ -10,14 +10,14 @@ from django.utils.text import slugify
 
 from dateutil.relativedelta import relativedelta
 
-from .forms import CompanyForm, EmployeeForm, EmployeeImportForm, BookingConfigForm
+from .forms import CompanyForm, EmployeeForm, EmployeeImportForm, BookingConfigForm, EmployeeAssignmentForm
 from json import dumps
 
 from .models import *
 from accounts.models import Responsible
 from .db_queries import *
 
-from .methods import would_be_circle, mail
+from bilobit_portal.methods import would_be_circle, mail
 
 
 def re_slugify(slug):
@@ -216,12 +216,11 @@ def company_detail(request, com_id=''):
         services[ar.uuid].append(ar)
         gar_obj = {
             'id': re_slugify(ar.uuid),
-            'name': ar.service_name,
+            'name': ((ar.employee_first_name + ' ' + ar.employee_last_name + ' › ') if ar.employee_first_name else '') + ar.service_name,
             'actualStart': ar.start_date_stamp,
             'actualEnd': ar.end_date_stamp,
             'progressValue': ar.progress
         }
-        print(gar_obj)
         gantt_data.append(gar_obj)
 
     return render(request, 'portal/company/detail.html', get_final_context(request, {
@@ -366,14 +365,30 @@ def booking_edit(request, booking_id):
         booking.end_date = booking.end_date + \
             relativedelta(months=months_to_be_added)
         booking.save()
-        return redirect('../../')
-
-    # query =
-    # articles = Service.objects.raw(query, [booking.company.id])
-    # service = []
-    # for ar in articles:
-    #     service.append(ar)
+        return redirect('portal_home', comp_id=booking.company.uuid)
 
     return render(request, 'portal/service/lengthen.html', get_final_context(request, {
 
+    }))
+
+
+def assign_employee(request, booking_id):
+    booking = Booking.objects.get(uuid=booking_id)
+
+    if request.method == 'POST':
+        mail = request.POST['employee']
+
+        try:
+            booking.assigned_employee = Employee.objects.get(mail=mail)
+        except:
+            booking.assigned_employee = None
+        booking.save()
+        return redirect('portal:home-uuid', com_id=booking.company.uuid)
+
+    form = EmployeeAssignmentForm(
+        booking.company, current=booking.assigned_employee)
+
+    return render(request, 'portal/service/assign_employee.html', get_final_context(request, {
+        'form': form,
+        'booking': booking
     }))

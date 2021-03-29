@@ -1,9 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms.widgets import NumberInput
-from .models import Company, MyModelChoiceField, Employee, Booking
+from .models import Company, MyModelChoiceField, Employee, Booking, EmployeeChoiceField
 
-from .methods import would_be_circle, is_valid_mail
+from bilobit_portal.methods import would_be_circle, is_valid_mail
 
 
 class CompanyForm(forms.ModelForm):
@@ -84,3 +84,22 @@ class BookingConfigForm(forms.ModelForm):
     def clean_date(self, *args, **kwargs):
         date = self.cleaned_data['start_date']
         return date
+
+
+def get_employees_of_company(company):
+    return Employee.objects.filter(company=company)
+
+
+class EmployeeAssignmentForm(forms.ModelForm):
+    employee = forms.CharField()
+
+    def __init__(self, company_obj, current, *args, **kwargs):
+        super(EmployeeAssignmentForm, self).__init__(*args, **kwargs)
+        self.fields['employee'] = EmployeeChoiceField(initial=current,
+                                                      queryset=get_employees_of_company(company_obj), empty_label="- no employee assigned -", label="Employee", required=False)
+
+    class Meta:
+        model = Booking
+        fields = [
+            'employee'
+        ]

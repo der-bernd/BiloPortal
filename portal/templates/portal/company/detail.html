@@ -133,8 +133,20 @@
 </h3>
 <p>booked at: {{ art.created }} - last change: {{ art.updated }}</p>{{ art.booking_id }}
 <p>runtime: service ends on {{ art.end_date }} ({{ art.months_left }} months left)
-  <a href="/portal/company/lengthen-booking/{{ art.uuid }}/">lengthen my booking</a>
+  <a href="{% url 'portal:lengthen-booking' booking_id=art.uuid %}">lengthen my booking</a>
 </p>
+{% if art.employee_first_name %}
+<p>
+  <span>
+  This service is assigned to {{ art.employee_first_name }} {{ art.employee_last_name }}</span>
+  <a href="{% url 'portal:assign-service' booking_id=art.uuid %}">Assign to different employee</a>
+</p>
+{% else %}
+<p>
+  <span>This service is not assigned to an employee</span>
+  <a href="{% url 'portal:assign-service' booking_id=art.uuid %}">Assign to an employee</a>
+</p>
+{% endif %}
 {% endif %}
 <ul>
   <li>

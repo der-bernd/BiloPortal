@@ -5,6 +5,8 @@ from portal.models import Company
 from accounts.models import Responsible
 from django.conf import settings
 
+from bilobit_portal.methods import mail, responsible_added_text
+
 from .forms import ResponsibleCreationForm, ResponsibleChangeForm
 
 
@@ -23,6 +25,9 @@ def responsible_create_update(request, com_id):
             obj = form.save(commit=False)
             obj.company = company
             form.save()
+
+            mail(to=obj.mail, subject='Bilobit Portal: Your account has been created',
+                 message=responsible_added_text(obj.mail, obj.first_name))
 
             return redirect('portal:home')
 

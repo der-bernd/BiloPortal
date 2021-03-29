@@ -1,0 +1,18 @@
+{% extends 'portal/service/a_page.html' %} {% block content %}
+<hr />
+
+<h3><a href="../../">Back to my company</a></h3>
+
+<h3>Assign employee to service</h3>
+
+{{ all_employees }}
+
+<div>
+  <form method="POST" action="">
+    {% csrf_token %} {{ form.as_p }}
+
+    <input type="submit" value="Save" />
+  </form>
+</div>
+<span></span>
+{% endblock %}

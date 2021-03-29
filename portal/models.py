@@ -13,6 +13,8 @@ from django.utils import timezone
 from django.db.migrations.serializer import BaseSerializer
 from django.db.migrations.writer import MigrationWriter
 
+# from accounts.models import Responsible
+
 
 # excellent src for polymorphism in django:
 # https://realpython.com/modeling-polymorphism-django-python/
@@ -143,10 +145,13 @@ class Booking(models.Model):
         default=uuid.uuid4,
         editable=False)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    assigned_employee = models.ForeignKey(
+        Employee, on_delete=models.RESTRICT, null=True, blank=True)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     amount = models.IntegerField(default=1)
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(auto_now=True),
+    # updated_by = models.ForeignKey(Responsible, on_delete=models.RESTRICT)
     notes = models.CharField(max_length=1000, null=True, blank=True)
     internal_notes = models.CharField(max_length=5000, null=True, blank=True)
     start_date = models.DateField(default=timezone.now)
@@ -166,3 +171,8 @@ class MyModelChoiceField(ModelChoiceField):
 
     # def __str__(self):
     #     return f"{ self.name } in { self.city }"
+
+
+class EmployeeChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        return f'{ obj.first_name } { obj.last_name }'

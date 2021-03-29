@@ -30,5 +30,8 @@ urlpatterns = [
          service_config, name="service-config"),
 
     path('company/lengthen-booking/<uuid:booking_id>/',
-         booking_edit, name="edit-booking"),
+         booking_edit, name="lengthen-booking"),
+
+    path('company/assign-service/<uuid:booking_id>/',
+         assign_employee, name="assign-service"),
 ]

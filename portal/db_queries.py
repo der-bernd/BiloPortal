@@ -8,13 +8,14 @@ SELECT
     booking.end_date,
     (UNIX_TIMESTAMP(booking.start_date) * 1000) as start_date_stamp,
     (UNIX_TIMESTAMP(booking.end_date) * 1000) as end_date_stamp,
-    booking.uuid, /* please note: when using an alias different to 'uuid', then django orm won't convert it into valid uuid with hyphens! */
+    booking.uuid, /* please note: when using an alias different to 'uuid', then django ORM won't convert it into valid uuid with hyphens! */
     TIMESTAMPDIFF(MONTH, CURRENT_DATE(), booking.end_date) AS months_left,
     IF(CURRENT_DATE() > booking.end_date, 1000,
+    IF(CURRENT_DATE() < booking.start_date, 0,
     (FLOOR( /* important to choose a function that returns an int, e.g. round could also return an int and will throw error in json */
        DATEDIFF(CURRENT_DATE(), booking.start_date) / 
        DATEDIFF(booking.end_date, booking.start_date)
-       * 1000))) as progress,
+       * 1000)))) as progress,
     service.name AS service_name,
     service.price,
     service.duration,
@@ -23,7 +24,9 @@ SELECT
     article.id AS article_id,
     article.description AS art_desc,
     manu.name AS manu,
-    a_group.name AS group_name
+    a_group.name AS group_name,
+    employee.first_name AS employee_first_name,
+    employee.last_name AS employee_last_name
 FROM
     portal_booking booking
 JOIN portal_service service ON
@@ -38,6 +41,8 @@ JOIN portal_manufacturer manu ON
     manu.id = article.manufacturer_id
 JOIN portal_company company ON
     company.id = booking.company_id
+LEFT JOIN portal_employee employee ON
+	employee.mail = booking.assigned_employee_id
 WHERE
     company.uuid = %s
 ORDER BY

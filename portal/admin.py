@@ -54,7 +54,7 @@ class ManufacturerAdmin(admin.ModelAdmin):
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
     list_filter = []
-    list_display = ['com_name', 'ser_name', 'amount',
+    list_display = ['com_name', 'ser_name', 'amount', 'assigned_employee',
                     'created', 'updated', 'start_date', 'end_date']
 
 
