@@ -25,10 +25,17 @@
       <p><span>{{ company.name }}</span>
          {% if company.id == request.user.company.id %}
     <span>(My company)</span>
+
     {% endif %}
         {% if key == 0 and company.id == request.user.company.id or key > 1 %}
         <!-- when company is hierarchical lower than my company, I can visit it as well -->
       <a href="{% url 'portal:home-uuid' com_id=company.uuid %}">View</a>
+      
+      {% endif %}
+      {% if user.is_admin or user.is_staff %}
+        {% if key == 1 %}
+        <a href="update/">edit company</a>
+        {% endif %}
       {% endif %}
       </p>
       <p><span>{{ company.postcode }}</span> <span>{{ company.city }}</span></p>
@@ -55,9 +62,7 @@
 <br />
 <br />
 
-<!-- <p>
-  <a href="update/">edit my company</a>
-</p> -->
+
 <br />
 
 <h3>Responsibles</h3>

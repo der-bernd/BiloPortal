@@ -10,7 +10,7 @@ class ResponsibleAdmin(UserAdmin):
     form = ResponsibleChangeForm
     model = Responsible
     list_display = ('mail', 'company', 'is_admin', 'is_staff', 'is_active')
-    list_filter = ('is_staff', 'is_active', 'company', 'is_admin')
+    list_filter = ('is_staff', 'is_active', 'is_admin', 'company')
     fieldsets = (
         (None, {'fields': ('mail', 'first_name',
                            'last_name', 'company', 'is_admin', 'password')}),

@@ -1,3 +1,10 @@
+from bilobit_portal.methods import would_be_circle, mail
+from .db_queries import *
+from accounts.models import Responsible
+from .models import *
+from json import dumps
+from .forms import CompanyForm, CompanyPostForm, EmployeeForm, EmployeeImportForm, BookingConfigForm, EmployeeAssignmentForm
+from dateutil.relativedelta import relativedelta
 from io import StringIO
 import csv
 from django.http import Http404
@@ -8,20 +15,11 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 
-from dateutil.relativedelta import relativedelta
-
-from .forms import CompanyForm, EmployeeForm, EmployeeImportForm, BookingConfigForm, EmployeeAssignmentForm
-from json import dumps
-
-from .models import *
-from accounts.models import Responsible
-from .db_queries import *
-
-from bilobit_portal.methods import would_be_circle, mail
+from django.db.models.expressions import RawSQL
 
 
 def re_slugify(slug):
-    return str(slug).replace('-', '')
+    return str(slug).replace('-', '')  # just remove all the hyphens
 
 
 def app_overview(request):
@@ -102,37 +100,37 @@ def company_list_view(request):
     }))
 
 
-def company_create(request):
-    form = CompanyForm(request.POST or None)
-    possible_mother_companies = Company.objects.all()
-    """ can return all other companies, because the company which is going to be added
-    is not in the db yet """
-    if request.method == 'POST':
-        print(request.body)
-        if form.is_valid():
-            form.save()
-            return redirect('../')  # redirect directly to list
-    else:
-        return render(request, 'portal/company/create.html', get_final_context(request, {
-            'form': form,
-            'possible_mother_companies': possible_mother_companies
-        }))
+# def company_create(request):
+#     form = CompanyForm(request.POST or None)
+#     possible_mother_companies = Company.objects.all()
+#     """ can return all other companies, because the company which is going to be added
+#     is not in the db yet """
+#     if request.method == 'POST':
+#         print(request.body)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('../')  # redirect directly to list
+#     else:
+#         return render(request, 'portal/company/create.html', get_final_context(request, {
+#             'form': form,
+#             'possible_mother_companies': possible_mother_companies
+#         }))
 
 
-def company_update(request, id=0):
-    form = CompanyForm(request.POST or None)
-    # possible_mother_companies = Company.objects.all()
-    """ can return all other companies, because the company which is going to be added
-    is not in the db yet """
-    if request.method == 'POST':
-        print(request.body)
-        if form.is_valid():
-            form.save()
-            return redirect('portal:home')  # redirect directly to list
-    else:
-        return render(request, 'portal/company/create.html', get_final_context(request, {
-            'form': form
-        }))
+# def company_update(request, id=0):
+#     form = CompanyForm(request.POST or None)
+#     # possible_mother_companies = Company.objects.all()
+#     """ can return all other companies, because the company which is going to be added
+#     is not in the db yet """
+#     if request.method == 'POST':
+#         print(request.body)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('portal:home')  # redirect directly to list
+#     else:
+#         return render(request, 'portal/company/create.html', get_final_context(request, {
+#             'form': form
+#         }))
 
 
 def company_create_update(request, com_id=''):
@@ -142,7 +140,7 @@ def company_create_update(request, com_id=''):
         except:
             obj = None
         # have to give obj as well, otherwise new record would be created
-        form = CompanyForm(request.POST, instance=obj)
+        form = CompanyPostForm(request.POST, instance=obj)
 
         if form.is_valid():
             form.save()
@@ -155,22 +153,18 @@ def company_create_update(request, com_id=''):
     except:
         obj = None
 
-    if obj is None:
-        print('creating')
-    else:
-        print('updating')
-
-    possible_mothers = Company.objects.all()
     if obj is not None:
-        filtered = []
-        for mother_com in possible_mothers:
-            if not would_be_circle(com_id, mother_com.id):
-                filtered.append(mother_com)
-            else:
-                print('sorted out ' + mother_com.name)
-        possible_mothers = filtered
+        print(obj.uuid)
+        arr = Company.objects.raw(GET_POSSIBLE_MOTHER_COMPANIES, [
+                                  re_slugify(obj.uuid)])
+        arr_1 = [b.id for b in arr]
 
-    form = CompanyForm(instance=obj)
+        possible_mothers = Company.objects.filter(id__in=arr_1)
+    else:
+        possible_mothers = Company.objects.all()
+
+    form = CompanyForm(current_mother=obj.mother_company,
+                       possible_mothers=possible_mothers, instance=obj)
 
     return render(request, 'portal/company/create_or_update.html', get_final_context(request, {
         'form': form,
@@ -203,9 +197,8 @@ def company_detail(request, com_id=''):
         company=current_comp)
     employees = Employee.objects.filter(company=current_comp)
 
-    query = str(GET_SERVICES_OF_COMPANY)
-
-    articles = Booking.objects.raw(query, [re_slugify(com_id)])
+    articles = Booking.objects.raw(
+        GET_SERVICES_OF_COMPANY, [re_slugify(com_id)])
     services = {}
     gantt_data = []
 

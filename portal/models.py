@@ -36,7 +36,7 @@ class Company(models.Model):
         'self', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.name + ' aus ' + self.city
 
 
 class Employee(models.Model):
@@ -164,13 +164,10 @@ class Booking(models.Model):
         return self.service.name
 
 
-class MyModelChoiceField(ModelChoiceField):
+class CompanyChoiceField(ModelChoiceField):
     # overwritten this way, could also have been solved with __str__, but overwrites all(!) displays
     def label_from_instance(self, obj):
         return f"{ obj.name } in { obj.city }"
-
-    # def __str__(self):
-    #     return f"{ self.name } in { self.city }"
 
 
 class EmployeeChoiceField(ModelChoiceField):

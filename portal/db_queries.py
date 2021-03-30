@@ -135,3 +135,36 @@ FROM this
 JOIN portal_company child
 ON child.mother_company_id = this.id
 '''
+
+GET_POSSIBLE_MOTHER_COMPANIES = '''
+SELECT minuend.id, minuend.name, minuend.city
+FROM portal_company minuend
+LEFT JOIN(
+    WITH level_0 AS (
+        SELECT id, name, mother_company_id
+        FROM portal_company
+        WHERE uuid = %s
+    )
+	SELECT
+    	level_0.id, level_0.name, level_0.mother_company_id
+	FROM level_0
+	UNION
+	SELECT
+    	level_1.id,
+    	level_1.name,
+    	level_1.mother_company_id
+	FROM level_0
+	JOIN portal_company level_1
+    ON level_1.mother_company_id = level_0.id
+	UNION
+	SELECT
+    	level_2.id, level_2.name, level_2.mother_company_id
+	FROM level_0
+	JOIN portal_company level_1
+    ON level_1.mother_company_id = level_0.id
+	JOIN portal_company level_2
+    ON level_2.mother_company_id = level_1.id
+) subtrahend
+USING (ID)
+WHERE subtrahend.id IS NULL
+'''

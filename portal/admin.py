@@ -6,7 +6,7 @@ from .admin_filters import *
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_filter = [HasMotherCompanyFilter]
-    list_display = ['name', 'city', 'details']
+    list_display = ['name', 'city', 'details', 'mother_company']
 
 
 @admin.register(Service)

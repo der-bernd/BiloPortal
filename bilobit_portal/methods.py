@@ -8,13 +8,7 @@ def would_be_circle(child_id, mother_id):
     current_id = mother_id  # start at mother and look for her mothers
     current = Company.objects.get(id=current_id)
     print(str(child_id) + str(mother_id))
-    """ res = Company.objects.filter(
-        mother_company__mother_company__mother_company__mother_company__mother_company__mother_company=child_id)
-    try:
-        res.get(id=mother_id)
-        return True
-    except:
-        return False """
+
     while current.mother_company:
         if current.mother_company.id == child_id:
             return True

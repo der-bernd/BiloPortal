@@ -1,16 +1,40 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms.widgets import NumberInput
-from .models import Company, MyModelChoiceField, Employee, Booking, EmployeeChoiceField
+from .models import Company, CompanyChoiceField, Employee, Booking, EmployeeChoiceField
 
 from bilobit_portal.methods import would_be_circle, is_valid_mail
 
 
-class CompanyForm(forms.ModelForm):
-    possible_mothers = Company.objects.all()
+class CompanyPostForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = [
+            'name',
+            'address',
+            'postcode',
+            'city',
+            'details',
+            'mother_company'
+        ]
 
-    mother_company = MyModelChoiceField(queryset=possible_mothers,
-                                        empty_label="- no mother company -", label="Mother company", required=False)
+    def clean_postcode(self, *args, **kwargs):
+        postcode = self.cleaned_data.get('postcode')
+        if postcode > 10000 and postcode < 99999:
+            return postcode
+        else:
+            raise ValidationError('Postcode not valid')
+
+
+class CompanyForm(forms.ModelForm):
+    mother_company = forms.CharField()  # just to have a field
+
+    def __init__(self, instance, current_mother, possible_mothers, *args, **kwargs):
+        super(CompanyForm, self).__init__(instance=instance, *args, **kwargs)
+        # print(possible_mothers)
+        self.fields['mother_company'] = CompanyChoiceField(
+            initial=current_mother,
+            queryset=possible_mothers, empty_label="- no mother company set -", label="Mother Company", required=False)
 
     class Meta:
         model = Company
@@ -23,20 +47,20 @@ class CompanyForm(forms.ModelForm):
             'mother_company'
         ]
 
-    """ def clean_mother_company(self, *args, **kwargs):
-        mother_com = self.cleaned_data.get('mother_company')
-        mother_id = mother_com.id
-        try:
-            own_id = self.cleaned_data.get('id')
-            print(own_id)
-        except:
-            own_id = 0
-        if own_id > 0:
-            is_circle = would_be_circle(own_id, mother_id)
-            if is_circle:
-                raise ValidationError(str(
-                    to_be_saved.mother_company.name) + ' is already a mother -> circle would be generated')
-        return mother_com """
+    # """ def clean_mother_company(self, *args, **kwargs):
+    #     mother_com = self.cleaned_data.get('mother_company')
+    #     mother_id = mother_com.id
+    #     try:
+    #         own_id = self.cleaned_data.get('id')
+    #         print(own_id)
+    #     except:
+    #         own_id = 0
+    #     if own_id > 0:
+    #         is_circle = would_be_circle(own_id, mother_id)
+    #         if is_circle:
+    #             raise ValidationError(str(
+    #                 to_be_saved.mother_company.name) + ' is already a mother -> circle would be generated')
+    #     return mother_com """
 
     def clean_postcode(self, *args, **kwargs):
         postcode = self.cleaned_data.get('postcode')
@@ -91,7 +115,7 @@ def get_employees_of_company(company):
 
 
 class EmployeeAssignmentForm(forms.ModelForm):
-    employee = forms.CharField()
+    employee = forms.CharField()  # just to have a field
 
     def __init__(self, company_obj, current, *args, **kwargs):
         super(EmployeeAssignmentForm, self).__init__(*args, **kwargs)
