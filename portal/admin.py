@@ -35,8 +35,11 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_filter = []
-    list_display = ['name', 'description', 'price', 'duration']
+    list_filter = ['group']
+    list_display = ['name', 'get_price', 'duration']
+
+    def get_price(self, obj):  # https://realpython.com/customize-django-admin-python/
+        return str(obj.price) + ' €'
 
 
 @admin.register(Equipment)
@@ -48,7 +51,19 @@ class EquipmentAdmin(admin.ModelAdmin):
 @admin.register(Manufacturer)
 class ManufacturerAdmin(admin.ModelAdmin):
     list_filter = []
-    list_display = ['name', 'support_mail', 'notes']
+    list_display = ['name', 'support_mail', 'products']
+
+    def products(self, obj):
+        return Article.objects.filter(manufacturer=obj).count()
+
+    # def queryset(self, request): # see: https://stackoverflow.com/questions/2168475/django-admin-how-to-sort-by-one-of-the-custom-list-display-fields-that-has-no-d
+    #     qs = super(ManufacturerAdmin, self).get_queryset(request)
+    #     qs = qs.annotate(models.Count('article'))
+    #     return qs
+
+    # def number_of_products(self, obj):
+    #     return obj.article__count
+    # number_of_products.admin_order_field = 'number_of_products'
 
 
 @admin.register(Booking)

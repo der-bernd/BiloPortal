@@ -268,9 +268,7 @@ def employee_delete(request, com_id, em_id):
 def service_store(request, com_id):
     company = Company.objects.get(uuid=com_id)
 
-    query = str(GET_SERVICES_FROM_STORE)
-
-    articles = Service.objects.raw(query, [company.id])
+    articles = Service.objects.raw(GET_SERVICES_FROM_STORE, [company.id])
     services = {}
     for ar in articles:
         if ar.service_id not in services:

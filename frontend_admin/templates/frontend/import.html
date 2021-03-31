@@ -1,3 +1,4 @@
+{% extends './app.html' %} {% block page %}
 <h4>Import articles via csv</h4>
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %} {{ form.as_p }}
@@ -26,3 +27,4 @@
 <p>
   <a href="{% url 'portal:home' %}">Back to company</a>
 </p>
+{% endblock %}

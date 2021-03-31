@@ -24,6 +24,10 @@ def csv_upload_to_dict_list(request_FILE):
     return dict_list
 
 
+def app_overview(request):
+    return render(request, 'frontend/app.html', {})
+
+
 def import_articles(request):
     if request.method == 'POST':
         type_ = request.POST.get('type')
@@ -69,7 +73,7 @@ def import_articles(request):
 
         model_type.objects.bulk_create(bulk)
 
-        return redirect('frontend_admin:import-articles')
+        return redirect('frontend_admin:home')
 
     return render(request, 'frontend/import.html', {
 

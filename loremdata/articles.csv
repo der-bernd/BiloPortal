@@ -1,3 +1,22 @@
 name,id_by_manufacturer,manufacturer,group,price
 Headset by Panasonic,38732673,Panasonic Inc.,Headset,800
 Adobe UX,983298479,Adobe Inc.,License,100
+Adobe Photoshop,723485824,Adobe Inc.,License,300
+Adobe Lightroom,7437343,Adobe Inc.,License,300
+Adobe AfterEffects,8456838,Adobe Inc.,License,400
+Blender,7437343,Adobe Inc.,License,300
+Dell XPS 13,87344367,Dell Electronics,Notebook,600
+Dell XPS 15,84376946,Dell Electronics,Notebook,830
+Dell XPS 17,87348673,Dell Electronics,Notebook,980
+Dell Workstation X1,832475384,Dell Electronics,Workstation,2800
+HP ENVY x360 15,8433745,HP Electronics,Notebook,750
+HP Elite Ultra 20,83473746,HP Electronics,Notebook,950
+HP Elite Ultra 19,238746583,HP Electronics,Notebook,890
+Samsung ProPad 12,982375875,HP Electronics,Notebook,600
+Samsung Galaxy Tab A,932476834,Samsung Electronics,Notebook,250
+Panasonic RB-M700B,82347284,Panasonic Inc.,Headset,180
+Panasonic RB-M500B,98237582,Panasonic Inc.,Headset,130
+Panasonic RB-M300B,92385853,Panasonic Inc.,Headset,100
+Microsoft Office 365,78327574,Microsoft Inc.,License,80
+Microsoft Office 2016,723485984,Microsoft Inc.,License,60
+Microsoft Office 2019,923838644,Microsoft Inc.,License,100

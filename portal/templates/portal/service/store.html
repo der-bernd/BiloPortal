@@ -4,7 +4,7 @@
 <h3><a href="../">Back to {{ company.name }}</a></h3>
 
 <h3>Currently offered services</h3>
-{% for key, articles in services.items %}
+{{ services }} {% for key, articles in services.items %}
 <span></span>
 <ul>
   {% for art in articles %} {% if forloop.first %}
