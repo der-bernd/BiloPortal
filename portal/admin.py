@@ -9,10 +9,16 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ['name', 'city', 'details', 'mother_company']
 
 
+# https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Admin_site
+class ArticleInline(admin.TabularInline):
+    model = Equipment
+
+
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     list_filter = []
     list_display = ['name', 'price', 'duration', 'notes']
+    inlines = [ArticleInline]
 
 
 @admin.register(ServiceGroup)

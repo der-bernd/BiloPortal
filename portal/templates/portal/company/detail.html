@@ -160,11 +160,9 @@
   </li>
 </ul>
 {% endfor %}
-
-{% include './gantt_chart.html' %}
 {% empty %}
 <p>You haven't booked any services yet</p>
 {% endfor %}
-
+{% include './gantt_chart.html' %}
 
 {% endblock %}

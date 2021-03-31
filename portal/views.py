@@ -171,16 +171,17 @@ def company_detail(request, com_id=''):
     for ar in articles:
         if ar.uuid not in services:
             services[ar.uuid] = []
+            gar_obj = {
+                'id': re_slugify(ar.uuid),
+                'name': ((ar.employee_first_name + ' ' + ar.employee_last_name + ' › ') if ar.employee_first_name else '') + ar.service_name,
+                'actualStart': ar.start_date_stamp,
+                'actualEnd': ar.end_date_stamp,
+                'progressValue': ar.progress
+            }
+            # only append first item, otherwise for each article would a line be generated
+            gantt_data.append(gar_obj)
 
         services[ar.uuid].append(ar)
-        gar_obj = {
-            'id': re_slugify(ar.uuid),
-            'name': ((ar.employee_first_name + ' ' + ar.employee_last_name + ' › ') if ar.employee_first_name else '') + ar.service_name,
-            'actualStart': ar.start_date_stamp,
-            'actualEnd': ar.end_date_stamp,
-            'progressValue': ar.progress
-        }
-        gantt_data.append(gar_obj)
 
     return render(request, 'portal/company/detail.html', get_final_context(request, {
         'companies': comps,
