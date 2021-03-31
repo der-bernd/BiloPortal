@@ -94,7 +94,6 @@
     var nameCol = dataGrid.column(1);
     nameCol.title("Service Name").width(250);
     var emCol = dataGrid.column(2);
-    emCol.labels().hAlign("left");
     emCol
       .title("Employee")
       .width(160)
@@ -104,6 +103,15 @@
         if (first_name == null) return "-";
         else return first_name + " " + this.item.get("employee_last_name");
       }); // ' ‹ '
+    var leftCol = dataGrid.column(3);
+    leftCol
+      .title("Months left")
+      .width(70)
+      .labels()
+      .format(function () {
+        return this.item.get("months_left");
+      });
+    // emCol.labels().hAlign("left");
 
     // configure the scale: when giving Date.UTC(some_year, some_month, 'some_day') as argument to maximum(), chart will scale on that
     chart.getTimeline().scale().maximum();

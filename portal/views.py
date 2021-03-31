@@ -176,6 +176,7 @@ def company_detail(request, com_id=''):
                 'employee_first_name': ar.employee_first_name or None,
                 'employee_last_name': ar.employee_last_name or None,
                 'name': ar.service_name,
+                'months_left': ar.months_left,
                 'actualStart': ar.start_date_stamp,
                 'actualEnd': ar.end_date_stamp,
                 'progressValue': ar.progress
