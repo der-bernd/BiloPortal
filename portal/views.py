@@ -173,7 +173,9 @@ def company_detail(request, com_id=''):
             services[ar.uuid] = []
             gar_obj = {
                 'id': re_slugify(ar.uuid),
-                'name': ((ar.employee_first_name + ' ' + ar.employee_last_name + ' › ') if ar.employee_first_name else '') + ar.service_name,
+                'employee_first_name': ar.employee_first_name or None,
+                'employee_last_name': ar.employee_last_name or None,
+                'name': ar.service_name,
                 'actualStart': ar.start_date_stamp,
                 'actualEnd': ar.end_date_stamp,
                 'progressValue': ar.progress
