@@ -92,12 +92,12 @@
 
     dataGrid.column(0).enabled(false); // hide first column with id
     var nameCol = dataGrid.column(1);
-    nameCol.title("Service Name");
+    nameCol.title("Service Name").width(250);
     var emCol = dataGrid.column(2);
     emCol.labels().hAlign("left");
     emCol
       .title("Employee")
-      .width(140)
+      .width(160)
       .labels()
       .format(function () {
         var first_name = this.item.get("employee_first_name");
@@ -117,7 +117,7 @@
 </script>
 <style>
   #container {
-    width: 80vw;
+    width: 98vw;
     height: 40vh;
   }
 </style>
