@@ -13,8 +13,6 @@ from django.utils import timezone
 from django.db.migrations.serializer import BaseSerializer
 from django.db.migrations.writer import MigrationWriter
 
-# from accounts.models import Responsible
-
 
 # excellent src for polymorphism in django:
 # https://realpython.com/modeling-polymorphism-django-python/
@@ -33,7 +31,7 @@ class Company(models.Model):
     details = models.TextField(
         blank=True, null=False)
     mother_company = models.ForeignKey(
-        'self', on_delete=models.CASCADE, null=True, blank=True)
+        'self', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name + ' aus ' + self.city
@@ -101,19 +99,6 @@ class ServiceGroup(models.Model):
 
     def __str__(self):
         return self.name
-
-
-# class ServiceGroupSerializer(BaseSerializer):
-#     def serialize(self):
-#         return repr(self.value), {'from . import ServiceGroup'}
-
-
-# MigrationWriter.register_serializer(ServiceGroup, ServiceGroupSerializer)
-
-
-# def get_first_service_group():
-#     # better practice than (id=1) or stuff like that
-#     return ServiceGroup.objects.first()
 
 
 class Service(models.Model):

@@ -100,39 +100,6 @@ def company_list_view(request):
     }))
 
 
-# def company_create(request):
-#     form = CompanyForm(request.POST or None)
-#     possible_mother_companies = Company.objects.all()
-#     """ can return all other companies, because the company which is going to be added
-#     is not in the db yet """
-#     if request.method == 'POST':
-#         print(request.body)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('../')  # redirect directly to list
-#     else:
-#         return render(request, 'portal/company/create.html', get_final_context(request, {
-#             'form': form,
-#             'possible_mother_companies': possible_mother_companies
-#         }))
-
-
-# def company_update(request, id=0):
-#     form = CompanyForm(request.POST or None)
-#     # possible_mother_companies = Company.objects.all()
-#     """ can return all other companies, because the company which is going to be added
-#     is not in the db yet """
-#     if request.method == 'POST':
-#         print(request.body)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('portal:home')  # redirect directly to list
-#     else:
-#         return render(request, 'portal/company/create.html', get_final_context(request, {
-#             'form': form
-#         }))
-
-
 def company_create_update(request, com_id=''):
     if request.method == 'POST':
         try:
@@ -147,7 +114,6 @@ def company_create_update(request, com_id=''):
 
             return redirect('portal:home')
 
-    # the part below will handle GET requests when not returned already
     try:
         obj = Company.objects.get(uuid=com_id)
     except:
@@ -258,13 +224,13 @@ def employee_create_update(request, com_id, em_id=''):
                     company=company
                 )
 
-            reverse('portal:home')
+            return redirect('portal:home')
 
         if form.is_valid():
             empl = form.save(commit=False)
             empl.company = Company.objects.get(uuid=com_id)
             form.save()
-            reverse('portal:home')
+            return redirect('portal:home')
 
     try:
         if em_id == '':
