@@ -74,7 +74,7 @@
       item.actualStart = new Date(item.actualStart).getTime();
       item.actualEnd = new Date(item.actualEnd).getTime();
       item.progressValue /= 10;
-      item.progressValue += "%"; // need to jump between number sizes, e.g. 523 would be converted to 52,3%
+      item.progressValue += "%"; // need to convert a bit, e.g. 523 would be converted to 52,3%
 
       return item;
     });
