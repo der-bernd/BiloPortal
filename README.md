@@ -13,3 +13,4 @@ Django installed:
 XAMPP or other local server with MySQL running
 
 Lots of motivation and fun
+.
