@@ -26,8 +26,8 @@ def responsible_create_update(request, com_id):
             obj.company = company
             form.save()
 
-            mail(to=obj.mail, subject='Bilobit Portal: Your account has been created',
-                 message=responsible_added_text(obj.mail, obj.first_name))
+            #  mail(to=obj.mail, subject='Bilobit Portal: Your account has been created',
+            #      message=responsible_added_text(obj.mail, obj.first_name))
 
             return redirect('portal:home')
 

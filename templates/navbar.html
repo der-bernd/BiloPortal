@@ -25,9 +25,14 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'info_pages:about' %}">About</a>
         </li>
+        
+        {% if request.user.is_authenticated %}
         <li class="nav-item">
+ 
           <a class="nav-link" href="{% url 'portal:home' %}">Portal</a>
+        
         </li>
+        {% endif %}
 
         <li class="nav-item">
           {% if request.user.is_authenticated %}
@@ -55,6 +60,11 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'frontend_admin:home' %}"
             >Admin Frontend</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/"
+            >Admin Backend</a
           >
         </li>
         {% endif %}

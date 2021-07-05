@@ -289,6 +289,7 @@ def service_store(request, com_id):
 def service_config(request, com_id, service_id):
     company = Company.objects.get(uuid=com_id)
     service = Service.objects.get(uuid=service_id)
+
     if request.method == 'POST':
         form = BookingConfigForm(request.POST)
 
@@ -301,9 +302,9 @@ def service_config(request, com_id, service_id):
             form.save()
             return redirect('../../../')
 
-    query = str(GET_SERVICES_FROM_STORE)
+    query = str(GET_SERVICE_DETAIL)
 
-    articles = Service.objects.raw(query, [company.id])
+    articles = Service.objects.raw(query, [re_slugify(service_id)])
     service = []
     for ar in articles:
         service.append(ar)
@@ -326,7 +327,7 @@ def booking_edit(request, booking_id):
         booking.end_date = booking.end_date + \
             relativedelta(months=months_to_be_added)
         booking.save()
-        return redirect('portal_home', comp_id=booking.company.uuid)
+        return redirect('portal:home') # just return to company, will be automatically redirected to proper company
 
     return render(request, 'portal/service/lengthen.html', get_final_context(request, {
 
