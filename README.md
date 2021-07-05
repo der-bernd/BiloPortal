@@ -10,6 +10,15 @@ Python > 3.0 installed
 Django installed:
 - To get started, visit https://www.djangoproject.com/start/
 
-XAMPP or other local server with MySQL running
+Some python packages:
+- pandas
+- dateutil
+- mysqlclient
+- django-multiselectfield
 
-Lots of motivation and fun
+
+XAMPP or other local server with MySQL running, creds are expected as constants in bilobit_portal/auth/db.py, see settings.py for which data is needed
+
+**Please do make migrations and migrate after settings the credentials!**
+
+And you will need lots of motivation. Have fun with it!
