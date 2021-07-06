@@ -1,28 +1,11 @@
+from django.http.response import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from portal.models import Article, Manufacturer, ArticleGroup, Company
-from .forms import FileImportForm
-from io import StringIO
-import csv
-import io
-import pandas
+from django.contrib import messages
+from django import forms
+from django.core.exceptions import ValidationError
 
-
-def csv_upload_to_dict_list(request_FILE):
-    csv_file = request_FILE
-
-    if not csv_file.name.endswith('.csv'):
-        return None
-    csv_data = csv_file.read().decode('utf-8')
-
-    # https://stackoverflow.com/questions/59163616/read-a-django-uploadedfile-into-a-pandas-dataframe
-    dataframe = pandas.read_csv(io.StringIO(csv_data), delimiter=',')
-
-    print(dataframe)
-    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_dict.html
-    dict_list = dataframe.to_dict('records')
-
-    return dict_list
-
+from my_utils.io import csv_upload_to_dict
 
 def app_overview(request):
     return render(request, 'frontend/app.html', {})
@@ -33,7 +16,12 @@ def import_articles(request):
         type_ = request.POST.get('type')
         keep_items = request.POST.get('keep_items')
 
-        dict_list = csv_upload_to_dict_list(request.FILES['file'])
+        dict_list = []
+        try:
+            dict_list = csv_upload_to_dict(request.FILES['file'])
+        except Exception as e:
+            print("error detected")
+            return HttpResponseBadRequest("Error: " + e.message)
 
         switcher = {
             'article': Article,

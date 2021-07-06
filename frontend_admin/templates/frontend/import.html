@@ -1,5 +1,5 @@
 {% extends './app.html' %} {% block page %}
-<h4>Import articles via csv</h4>
+<h4>Import items via csv</h4>
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %} {{ form.as_p }}
   <label

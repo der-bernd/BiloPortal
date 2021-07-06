@@ -84,4 +84,4 @@ class EmployeeAdmin(admin.ModelAdmin):
  """
 
 
-admin.site.site_header = 'Bilobit Portal Administration'
+admin.site.site_header = 'BiloPortal Backend'
