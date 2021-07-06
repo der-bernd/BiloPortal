@@ -1,0 +1,38 @@
+{% extends './a_page.html' %} {% block content %}
+<h1>This is support site</h1>
+
+{% if faq %}
+<h1>FAQ</h1>
+<table>
+<thead>
+<tr>
+    <th>Question</th>
+    <th>Answer</th>
+    <th>Related Service</th>
+</tr>
+</thead>
+<tbody>
+{% for f in faq %}
+    <tr>
+    <td>{{ f.question }}</td>
+    <td>{{ f.answer }}</td>
+    <td>
+    {% if f.service %}
+    {% comment %} made extra slots for easier functions and styling {% endcomment %}
+       <span>
+       {{ f.service }}
+       </span>
+       
+       {% else %}
+       <span>-</span>
+       {% endif %}
+    </td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
+{% comment %} show nothing when no faq is stored yet {% endcomment %}
+
+
+{% endblock %}

@@ -18,7 +18,9 @@
       <span> {% if art.duration %} - duration: {{ art.duration }} months</span>
       {% endif %}
     </span>
-    <a href="/support/">Ask support</a>
+    {% if art.faq_count > 0 %}
+    <span>{{ art.faq_count }} FAQ stored</span>
+    {% endif %}
 
     <a href="{{ art.uuid }}/config/">
       {% if art.is_already_booked %}

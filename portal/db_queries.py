@@ -64,7 +64,8 @@ SELECT
     article.description AS art_desc,
     manu.name AS manu,
     a_group.name AS group_name,
-    NOT(ISNULL(booking.id)) AS is_already_booked
+    NOT(ISNULL(booking.id)) AS is_already_booked,
+    (SELECT COUNT(*) FROM info_pages_faq WHERE service_id = service.id) AS faq_count
 FROM
     portal_service service
 JOIN portal_equipment eq ON
