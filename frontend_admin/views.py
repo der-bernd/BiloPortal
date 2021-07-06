@@ -35,15 +35,19 @@ def import_articles(request):
         if type_ == 'article':
             manus = Manufacturer.objects.all()
             art_group = ArticleGroup.objects.all()
+            failed_records = []
             for item in dict_list:
                 try:
                     item['manufacturer'] = manus.get(name=item['manufacturer'])
                     item['group'] = art_group.get(name=item['group'])
                 except:
-                    print('Could not import ' + str(item))
+                    failed_records.append(str(item))
                     continue
                 new_obj = model_type(**item)
                 bulk.append(new_obj)
+            if len(failed_records) > 0:
+                return HttpResponseBadRequest("""Not all records could have been stored properly.
+                Skipped records:\n""" + str(failed_records))
         else:
             bulk = [  # https://stackoverflow.com/questions/18383471/django-bulk-create-function-example
                 model_type(**item)
