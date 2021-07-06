@@ -1,8 +1,12 @@
 {% extends 'portal/employee/a_page.html' %} {% block content %}
 <hr />
+
+{% if is_assigned %}
+<h5>This employee cannot be deleted yet, he or she is assigned to at least one booking</h5>
+<a href="../../">Ok, cancel and go back</a>
+{% else %}
 <form action="" method="POST">
   {% csrf_token %}
-
   <h3>
     Do you want to delete {{ employee.first_name }} {{ employee.last_name }}?
   </h3>
@@ -12,5 +16,6 @@
     <a href="../../">Cancel</a>
   </p>
 </form>
+{% endif %}
 
 {% endblock %}

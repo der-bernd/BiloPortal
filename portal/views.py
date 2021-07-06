@@ -216,17 +216,30 @@ def employee_create_update(request, com_id, em_id=''):
             if not csv_file.name.endswith('.csv'):
                 return None
 
-            csv_data = csv_file.read().decode('utf-8')
+            csv_multiline = csv_file.read().decode('utf-8')
+            csv_data_list = csv_multiline.splitlines()
 
-            next(io_string)  # skip header
+            # next(csv_data_list)  # skip header
 
-            for line in csv.reader(io_string, delimiter=','):
+            header_done = False
+            for line in csv_data_list:
+                if not header_done:
+                    header_done = True
+                    continue
+                cols = str(line).split(',') # just converting it to string that auto-complete is working
                 _, created = Employee.objects.update_or_create(
-                    first_name=line[0],
-                    last_name=line[1],
-                    mail=line[2],
-                    company=company
+                    first_name = cols[0],
+                    last_name = cols[1],
+                    mail = cols[2],
+                    company = company
                 )
+            # for line in csv.reader(csv_data_list, delimiter=','):
+            #     _, created = Employee.objects.update_or_create(
+            #         first_name=line[0],
+            #         last_name=line[1],
+            #         mail=line[2],
+            #         company=company
+            #     )
 
             return redirect('portal:home')
 
@@ -259,13 +272,18 @@ def employee_create_update(request, com_id, em_id=''):
 
 def employee_delete(request, com_id, em_id):
     obj = Employee.objects.get(uuid=em_id)
+    is_assigned_to_booking = Booking.objects.filter(assigned_employee__uuid=em_id).count() > 0
 
     if request.method == 'POST':
-        obj.delete()
-        return redirect('portal:home')
+        if is_assigned_to_booking:
+            raise ValidationError("At least one booking is assigned to this employee")
+        else:
+            obj.delete()
+            return redirect('portal:home')
 
     return render(request, 'portal/employee/delete.html', get_final_context(request, {
         "employee": obj,
+        "is_assigned": is_assigned_to_booking
     }))
 
 
