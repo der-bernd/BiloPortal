@@ -136,7 +136,6 @@ class Booking(models.Model):
     amount = models.IntegerField(default=1)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    # updated_by = models.ForeignKey(Responsible, on_delete=models.RESTRICT)
     notes = models.CharField(max_length=1000, null=True, blank=True)
     internal_notes = models.CharField(max_length=5000, null=True, blank=True)
     start_date = models.DateField(default=timezone.now)

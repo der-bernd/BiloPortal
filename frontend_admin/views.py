@@ -5,7 +5,7 @@ from django.contrib import messages
 from django import forms
 from django.core.exceptions import ValidationError
 
-from my_utils.io import csv_upload_to_dict
+from my_utils.io import csv_upload_to_dict, header_of_csv_upload
 
 def app_overview(request):
     return render(request, 'frontend/app.html', {})
@@ -23,39 +23,55 @@ def import_articles(request):
             print("error detected")
             return HttpResponseBadRequest("Error: " + e.message)
 
-        switcher = {
-            'article': Article,
-            'manu': Manufacturer,
-            'group': ArticleGroup,
-            'company': Company
-        }
+        bulk = [] # init bulk array, objects in there will be stored in mass together at end
 
-        model_type = switcher[type_]
-        bulk = []
-        if type_ == 'article':
+
+        # auto-detect type depending of col names
+        
+        type_switch = {
+            "name,id_by_manufacturer,manufacturer,group,price": "article",
+            "name": "ag",
+            "name,address,postcode,city": "company",
+            "name,erp_id,website,support_mail": "manu"
+        }
+        try:
+            csv_header = header_of_csv_upload(request.FILES['file'])
+        except Exception as e:
+            return HttpResponseBadRequest("Error: " + e.message)
+        print(csv_header)
+
+        type_ = type_switch.get(csv_header, "")
+        if type_ == "":
+            return HttpResponseBadRequest("Type could not been detected automatically, found following cols:\n" + 
+            csv_header)
+        elif type_ == 'article':
+            # basic config, easier than switch or stuff like this
+            type_ = Article # overwrite type, we don't need original information any more            
+
             manus = Manufacturer.objects.all()
             art_group = ArticleGroup.objects.all()
             failed_records = []
+            header_handled =False
             for item in dict_list:
+                if not header_handled:
+                    header_handled = True
+                    continue
                 try:
                     item['manufacturer'] = manus.get(name=item['manufacturer'])
                     item['group'] = art_group.get(name=item['group'])
                 except:
                     failed_records.append(str(item))
                     continue
-                new_obj = model_type(**item)
+                new_obj = type_(**item)
                 bulk.append(new_obj)
-            if len(failed_records) > 0:
-                return HttpResponseBadRequest("""Not all records could have been stored properly.
-                Skipped records:\n""" + str(failed_records))
         else:
             bulk = [  # https://stackoverflow.com/questions/18383471/django-bulk-create-function-example
-                model_type(**item)
+                type_(**item)
                 for item in dict_list
             ]
 
         if keep_items:
-            start_index = model_type.objects.all().order_by("-id")[0].id
+            start_index = type_.objects.all().order_by("-id")[0].id
         else:
             start_index = 0
 
@@ -63,9 +79,13 @@ def import_articles(request):
             key += start_index
             item['pk'] = key
 
-        model_type.objects.bulk_create(bulk)
+        type_.objects.bulk_create(bulk) # and finally store all gathered objects
 
-        return redirect('frontend_admin:home')
+        if len(failed_records) > 0:
+            return HttpResponseBadRequest("""Not all records could have been stored properly.
+            Skipped records:\n""" + str(failed_records))
+        else:
+            return redirect('frontend_admin:home')
 
     return render(request, 'frontend/import.html', {
 
