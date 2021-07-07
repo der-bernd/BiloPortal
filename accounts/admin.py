@@ -9,7 +9,7 @@ class ResponsibleAdmin(UserAdmin):
     add_form = ResponsibleCreationForm
     form = ResponsibleChangeForm
     model = Responsible
-    list_display = ('mail', 'company', 'is_admin', 'is_staff', 'is_active')
+    list_display = ('mail', 'first_name', 'last_name', 'company', 'is_admin', 'is_staff', 'is_active')
     list_filter = ('is_staff', 'is_active', 'is_admin', 'company')
     fieldsets = (
         (None, {'fields': ('mail', 'first_name',

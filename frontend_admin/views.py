@@ -20,8 +20,7 @@ def import_articles(request):
         try:
             dict_list = csv_upload_to_dict(request.FILES['file'])
         except Exception as e:
-            print("error detected")
-            return HttpResponseBadRequest("Error: " + e.message)
+            return HttpResponseBadRequest("Error: " + (e.message if hasattr(e, 'message') else str(e)))
 
         bulk = [] # init bulk array, objects in there will be stored in mass together at end
 
@@ -34,13 +33,13 @@ def import_articles(request):
             "name,address,postcode,city": "company",
             "name,erp_id,website,support_mail": "manu"
         }
-        try:
-            csv_header = header_of_csv_upload(request.FILES['file'])
-        except Exception as e:
-            return HttpResponseBadRequest("Error: " + e.message)
-        print(csv_header)
+        # try:
+        #     csv_header = header_of_csv_upload(request.FILES['file'])
+        # except Exception as e:
+        #     return HttpResponseBadRequest("Error: " + (e.message if hasattr(e, "message") else str(e)))
+        # print(csv_header)
 
-        type_ = type_switch.get(csv_header, "")
+        type_ = "article" if True else type_switch.get(csv_header, "")
         if type_ == "":
             return HttpResponseBadRequest("Type could not been detected automatically, found following cols:\n" + 
             csv_header)
