@@ -5,9 +5,6 @@ from django.forms import ModelChoiceField
 from multiselectfield import MultiSelectField
 from django.contrib.auth import get_user_model
 
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
-
 from django.utils import timezone
 
 from django.db.migrations.serializer import BaseSerializer
